@@ -40,17 +40,17 @@ class User
     private $password;
 
     /**
-     * @ORM\OneToMany(targetEntity=Posts::class, mappedBy="user_id", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Posts::class, mappedBy="user", orphanRemoval=true)
      */
     private $posts;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="user_id")
+     * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="user")
      */
     private $comments;
 
     /**
-     * @ORM\OneToMany(targetEntity=Likes::class, mappedBy="user_id")
+     * @ORM\OneToMany(targetEntity=Likes::class, mappedBy="user")
      */
     private $likes;
 

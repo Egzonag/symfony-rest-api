@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Profile;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,9 +15,27 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ProfileRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
+    private $manager;
+
+    public function __construct(
+        ManagerRegistry $registry,
+        EntityManagerInterface $manager
+    ) {
         parent::__construct($registry, Profile::class);
+        $this->manager = $manager;
+    }
+    public function saveProfile($data, $user)
+    {
+        $profile = new Profile();
+
+        $profile
+            ->setDob($data['dob'])
+            ->setGender($data['gender'])
+            ->setCountry($data['country'])
+            ->setCity($data['city'])
+            ->setUserId($user);
+
+        $this->entityManager->persist($profile);
     }
 
     // /**
