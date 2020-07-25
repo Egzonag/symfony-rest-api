@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Profile;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,10 +18,13 @@ class UserRepository extends ServiceEntityRepository
 {
 
     private $manager;
+    private $profile;
 
     public function __construct(
         ManagerRegistry $registry,
-        EntityManagerInterface $manager
+        EntityManagerInterface $manager,
+        ProfileRepository $profile
+
     ) {
         parent::__construct($registry, User::class);
         $this->manager = $manager;
@@ -30,7 +34,6 @@ class UserRepository extends ServiceEntityRepository
     public function saveUser($data)
     {
         $newuser = new User();
-
         $newuser
             ->setFirstName($data['firstName'])
             ->setLastName($data['lastName'])
@@ -38,13 +41,14 @@ class UserRepository extends ServiceEntityRepository
             ->setPassword($data['password']);
 
         $this->manager->persist($newuser);
-        $this->manager->flush();
+        $this->profile->saveProfile($data,$newuser);
     }
 
     //update user profile
-    public function updateUser(User $user): User
+    public function updateUser(User $user, Profile $prof): User
     {
         $this->manager->persist($user);
+        $this->manager->persist($prof);
         $this->manager->flush();
 
         return $user;
