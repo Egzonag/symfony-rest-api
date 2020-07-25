@@ -29,13 +29,16 @@ class ProfileRepository extends ServiceEntityRepository
         $profile = new Profile();
 
         $profile
-            ->setDob($data['dob'])
+            ->setDob(\DateTime::createFromFormat('Y-m-d', $data['dob']))
             ->setGender($data['gender'])
             ->setCountry($data['country'])
             ->setCity($data['city'])
+            ->setImg($data['img'])
             ->setUserId($user);
 
-        $this->entityManager->persist($profile);
+        $this->manager->persist($user);
+        $this->manager->persist($profile);
+        $this->manager->flush();
     }
 
     // /**

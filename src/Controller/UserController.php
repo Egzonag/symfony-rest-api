@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Post;
+use App\Entity\User;
 use App\Repository\ProfileRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -29,7 +30,6 @@ class UserController extends AbstractController
     public function profile($id): JsonResponse
     {
         $user = $this->userRepository->findOneBy(['id' => $id]);
-        // dd($user);
         $profile = $this->profileRepository->findOneBy(['user' => $id]);
 
         $data = [
@@ -54,7 +54,16 @@ class UserController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        $this->userRepository->saveUser($data);
+        $newuser = new User();
+
+        $newuser
+            ->setFirstName($data['firstName'])
+            ->setLastName($data['lastName'])
+            ->setEmail($data['email'])
+            ->setPassword($data['password']);
+
+        //create profile    
+        $this->profileRepository->saveProfile($data, $newuser);
 
         return new JsonResponse(['status' => 'User registered!'], Response::HTTP_CREATED);
     }
@@ -65,14 +74,21 @@ class UserController extends AbstractController
     public function update($id, Request $request): JsonResponse
     {
         $user = $this->userRepository->findOneBy(['id' => $id]);
+        $profile = $this->profileRepository->findOneBy(['user' => $id]);
         $data = json_decode($request->getContent(), true);
 
+        // dd($data);
         empty($data['firstName']) ? true : $user->setFirstName($data['firstName']);
         empty($data['lastName']) ? true : $user->setLastName($data['lastName']);
         empty($data['email']) ? true : $user->setEmail($data['email']);
         empty($data['password']) ? true : $user->setPassword($data['password']);
+        empty($data['dob']) ? true : $profile->setDob(\DateTime::createFromFormat('Y-m-d', $data['dob']));
+        empty($data['gender']) ? true : $profile->setGender($data['gender']);
+        empty($data['country']) ? true : $profile->setCountry($data['country']);
+        empty($data['city']) ? true : $profile->setCity($data['city']);
 
-        $updatedUser = $this->userRepository->updateUser($user);
+
+        $this->userRepository->updateUser($user, $profile);
 
         return new JsonResponse("Profile updated!", Response::HTTP_OK);
     }
