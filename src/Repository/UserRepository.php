@@ -27,18 +27,27 @@ class UserRepository extends ServiceEntityRepository
     }
 
     //creating a user for testing
-    public function saveUser($firstName, $lastName, $email, $password)
+    public function saveUser($data)
     {
         $newuser = new User();
 
         $newuser
-            ->setFirstName($firstName)
-            ->setLastName($lastName)
-            ->setEmail($email)
-            ->setPassword($password);
+            ->setFirstName($data['firstName'])
+            ->setLastName($data['lastName'])
+            ->setEmail($data['email'])
+            ->setPassword($data['password']);
 
         $this->manager->persist($newuser);
         $this->manager->flush();
+    }
+
+    //update user profile
+    public function updateUser(User $user): User
+    {
+        $this->manager->persist($user);
+        $this->manager->flush();
+
+        return $user;
     }
 
     // /**
