@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Posts;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,9 +15,30 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class PostsRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $manager;
+
+    public function __construct(
+        ManagerRegistry $registry,
+        EntityManagerInterface $manager
+
+    ) {
+        parent::__construct($registry, POsts::class);
+        $this->manager = $manager;
+    }
+
+    //creating a user
+    public function newPost($data, $user_id)
     {
-        parent::__construct($registry, Posts::class);
+        $newpost = new Posts();
+        $newpost
+            ->setTitle($data['title'])
+            ->setDescription($data['desc'])
+            ->setStatus($data['status'])
+            ->setCreated(new \DateTime())
+            ->setUserId($user_id);
+
+        $this->manager->persist($newpost);
+        $this->manager->flush();
     }
 
     // /**

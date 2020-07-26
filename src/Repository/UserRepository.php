@@ -30,7 +30,7 @@ class UserRepository extends ServiceEntityRepository
         $this->manager = $manager;
     }
 
-    //creating a user for testing
+    //creating a user
     public function saveUser($data)
     {
         $newuser = new User();
