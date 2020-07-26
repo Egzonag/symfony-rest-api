@@ -20,12 +20,13 @@ class Posts
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255) 
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * 
      */
     private $description;
 
@@ -35,23 +36,23 @@ class Posts
     private $status;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime") 
      */
     private $created;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="posts")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false) 
      */
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="post_id", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="post", orphanRemoval=true) 
      */
     private $comments;
 
     /**
-     * @ORM\OneToMany(targetEntity=Likes::class, mappedBy="post_id")
+     * @ORM\OneToMany(targetEntity=Likes::class, mappedBy="post")
      */
     private $likes;
 
