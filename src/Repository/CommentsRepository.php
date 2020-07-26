@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Comments;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,37 +15,37 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CommentsRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
+    private $manager;
+
+    public function __construct(
+        ManagerRegistry $registry,
+        EntityManagerInterface $manager
+
+    ) {
         parent::__construct($registry, Comments::class);
+        $this->manager = $manager;
     }
 
-    // /**
-    //  * @return Comments[] Returns an array of Comments objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    //creating a comment
+    public function newComment($data, $user, $post)
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $comment = new Comments();
+        $comment
+            ->setPostId($post)
+            ->setUserId($user)
+            ->setComment($data['comment']);
 
-    /*
-    public function findOneBySomeField($value): ?Comments
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $this->manager->persist($comment);
+        $this->manager->flush();
     }
-    */
+
+    //Delete comment
+    public function removeComment(Comments $comments): Comments
+    {
+        $this->manager->remove($comments);
+        $this->manager->flush();
+
+        return $comments;
+    }
+ 
 }

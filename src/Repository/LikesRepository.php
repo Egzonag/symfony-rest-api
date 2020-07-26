@@ -6,6 +6,7 @@ use App\Entity\Likes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @method Likes|null find($id, $lockMode = null, $lockVersion = null)
@@ -32,53 +33,35 @@ class LikesRepository extends ServiceEntityRepository
 
         $newlike->setUserId($user);
         $newlike->setPostId($post);
-            if ($state == "like") {
-                $newlike->setLikes(1);
-                $newlike->setUnlikes(0);
-            }else{
-                $newlike->setLikes(0);
-                $newlike->setUnlikes(1);
-            }
-            
+        if ($state == "like") {
+            $newlike->setLikes(1);
+            $newlike->setUnlikes(0);
+        } else {
+            $newlike->setLikes(0);
+            $newlike->setUnlikes(1);
+        }
 
         $this->manager->persist($newlike);
         $this->manager->flush();
     }
-   //update posts
-   public function updateLikes(Likes $likes): Likes
-   {
-       $this->manager->persist($likes);
-       $this->manager->flush();
-
-       return $likes;
-   }
-
-    // /**
-    //  * @return Likes[] Returns an array of Likes objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    //update likes
+    public function updateLikes(Likes $likes): Likes
     {
-        return $this->createQueryBuilder('l')
-            ->andWhere('l.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('l.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $this->manager->persist($likes);
+        $this->manager->flush();
 
-    /*
-    public function findOneBySomeField($value): ?Likes
-    {
-        return $this->createQueryBuilder('l')
-            ->andWhere('l.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $likes;
     }
-    */
+
+    public function getAllLikes($post_id)
+    {
+        $qb = $this->createQueryBuilder('l')
+            ->select('identity(l.post) as POST', 'SUM(l.likes) AS TOTAL_LIKES')
+            ->groupBy('l.post')
+            ->where('l.post = :post_id')
+            ->setParameter('post_id', $post_id);
+
+        return $qb->getQuery()
+            ->getResult();
+    }
 }

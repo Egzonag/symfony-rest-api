@@ -26,7 +26,7 @@ class PostsRepository extends ServiceEntityRepository
         $this->manager = $manager;
     }
 
-    //creating a user
+    //creating a new post
     public function newPost($data, $user_id)
     {
         $newpost = new Posts();
@@ -41,7 +41,7 @@ class PostsRepository extends ServiceEntityRepository
         $this->manager->flush();
     }
 
-    //update posts
+    //update existing post
     public function updatePost(Posts $posts): Posts
     {
         $this->manager->persist($posts);
@@ -59,34 +59,4 @@ class PostsRepository extends ServiceEntityRepository
         return $posts;
     }
 
-
-
-    // /**
-    //  * @return Posts[] Returns an array of Posts objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Posts
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
