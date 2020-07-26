@@ -1,5 +1,5 @@
 # Symfony RESTful API
-====================================================================================
+===============================================================
 
 This application is implemented as a RESTful API using the Symfony. Application allows users to create posts and make comments or like on those posts.
 
