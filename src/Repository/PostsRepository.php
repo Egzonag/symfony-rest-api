@@ -33,13 +33,33 @@ class PostsRepository extends ServiceEntityRepository
         $newpost
             ->setTitle($data['title'])
             ->setDescription($data['desc'])
-            ->setStatus($data['status'])
+            ->setStatus('unArchived')
             ->setCreated(new \DateTime())
             ->setUserId($user_id);
 
         $this->manager->persist($newpost);
         $this->manager->flush();
     }
+
+    //update posts
+    public function updatePost(Posts $posts): Posts
+    {
+        $this->manager->persist($posts);
+        $this->manager->flush();
+
+        return $posts;
+    }
+
+    //Delete posts
+    public function removePost(Posts $posts): Posts
+    {
+        $this->manager->remove($posts);
+        $this->manager->flush();
+
+        return $posts;
+    }
+
+
 
     // /**
     //  * @return Posts[] Returns an array of Posts objects
