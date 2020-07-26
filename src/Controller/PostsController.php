@@ -27,7 +27,7 @@ class PostsController extends AbstractController
      */
     public function getPosts(PostsRepository $postsRepository): JsonResponse
     {
-        $posts = $postsRepository->findBy(array('status' => 'unArchived'));
+        $posts = $postsRepository->findBy(array('status' => 'unArchived'), array('created' => 'DESC'));
 
         $data = array('post' => array());
         foreach ($posts as $post) {
@@ -40,7 +40,7 @@ class PostsController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/posts/create", name="new_post", methods={"POST"})
+     * @Route("/{id}/posts/new/post", name="new_post", methods={"POST"})
      */
     public function create(Request $request, $id): JsonResponse
     {
@@ -49,7 +49,7 @@ class PostsController extends AbstractController
 
         $this->postsRespository->newPost($data, $user);
 
-        return new JsonResponse(['status' => 'New post has been created!'], Response::HTTP_CREATED);
+        return new JsonResponse('New post has been created!', Response::HTTP_CREATED);
     }
 
     private function serializePost(Posts $posts)
@@ -99,7 +99,7 @@ class PostsController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/posts/{post}/delete", name="delete_customer", methods={"DELETE"})
+     * @Route("/{id}/posts/{post}/delete", name="delete_post", methods={"DELETE"})
      */
     public function delete($post, $id): JsonResponse
     {

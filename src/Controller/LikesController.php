@@ -23,7 +23,7 @@ class LikesController extends AbstractController
         $this->likesRespository = $likesRespository;
     }
     /**
-     * @Route("/{id}/{state}/{post}", name="likes",methods="POST")
+     * @Route("/{id}/{state}/{post}", name="likes", methods={"POST"})
      */
     public function like($id, $post, $state)
     {
@@ -36,7 +36,7 @@ class LikesController extends AbstractController
 
         if ($likes == null) {
             $this->likesRespository->newlike($user, $posts, $state);
-            return new JsonResponse("You ".$state." this post!", Response::HTTP_OK);
+            return new JsonResponse("You " . $state . " this post!", Response::HTTP_OK);
         } else {
             if ($state == "like") {
                 $likes->setLikes(1);
@@ -51,11 +51,11 @@ class LikesController extends AbstractController
     }
 
     /**
-     * @Route("/posts/{post}/likes", name="all_likes",methods="GET")
+     * @Route("/posts/{post_id}/likes", name="all_likes", methods={"GET"})
      */
-    public function viewLikes($post)
+    public function viewLikes($post_id)
     {
-        $likes = $this->likesRespository->findOneBy(['post' => $post]);
-
+        $allLikes = $this->likesRespository->getAllLikes($post_id);
+        return new JsonResponse($allLikes, Response::HTTP_OK);
     }
 }
