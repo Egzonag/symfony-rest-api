@@ -83,7 +83,7 @@ class PostsController extends AbstractController
     /**
      * @Route("/{id}/posts/{post}/{status}", name="update_post", methods={"PUT"})
      */
-    public function changeStatus(Request $request, $post, $status, $id): JsonResponse
+    public function changeStatus($post, $status, $id): JsonResponse
     {
         $post = $this->postsRespository->findOneBy(['id' => $post, 'user' => $id]);
         //$data = json_decode($request->getContent(), true);

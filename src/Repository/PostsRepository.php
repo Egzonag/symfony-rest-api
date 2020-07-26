@@ -22,7 +22,7 @@ class PostsRepository extends ServiceEntityRepository
         EntityManagerInterface $manager
 
     ) {
-        parent::__construct($registry, POsts::class);
+        parent::__construct($registry, Posts::class);
         $this->manager = $manager;
     }
 
